@@ -235,7 +235,7 @@ laguni1 = function(dt,n){
   return (dt2)
 }
 
-# unique name counts for same ssn (past/7/3)
+# unique name counts for same ssn (past/7/3) and neutralize values for the frivolous ssn '737610282'
 # app = as.data.table(app)
 name_ssn0 = app[,.(date,name,ssn)]
 name_ssn0 = name_ssn0[,uni_name_ssn:=cumsum(!duplicated(name)),by=ssn]
@@ -251,7 +251,7 @@ name_ssn_mean = colMeans(name_ssn[ssn!='737610282',4:6])
 name_ssn[,4:6] = lapply(name_ssn[,4:6],as.numeric)
 name_ssn = name_ssn[ssn=='737610282',`:=`(uni_name_ssn=name_ssn_mean[1],nameLag7ssn=name_ssn_mean[2],nameLag3ssn=name_ssn_mean[3])]
 
-# unique ssn counts for same identifier (past/7/3) and neutralize the frivolous value '737610282'
+# unique ssn counts for same identifier (past/7/3)
 ssn_id0 = app[,.(date,ssn,identifier)]
 ssn_id0 = ssn_id0[,uni_ssn_id:=cumsum(!duplicated(ssn)),by=identifier]
 ssn_id = laguni1(ssn_id0,7)
