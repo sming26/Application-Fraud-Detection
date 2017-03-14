@@ -1,8 +1,8 @@
-setwd('/Users/riyueyoutu/Desktop/USC/Courses/DSO562/project2/')
+#setwd('/Users/riyueyoutu/Desktop/Application-Fraud-Detection/')
 library(dplyr)
 library(lubridate)
-library(reshape2)
 library(data.table)
+
 app = read.csv('applications100k.csv')
 
 ## clean original variables
