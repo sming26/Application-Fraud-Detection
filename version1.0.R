@@ -2,6 +2,7 @@
 library(dplyr)
 library(lubridate)
 library(data.table)
+library(stringr) # to use str_pad command to add leading zeros
 
 app = read.csv('applications100k.csv')
 
@@ -19,6 +20,13 @@ app$homephone = ifelse(app$homephone<1000000,paste0('000',app$homephone),
                        ifelse(app$homephone<10000000,paste0('00',app$homephone),
                               ifelse(app$homephone<100000000,paste0('0',app$homephone),app$homephone)))
 
+
+## Or using str_pad to add leading zeros in ssn,zip, homephone fields.
+#app$ssn = str_pad(as.character(app$ssn),width = 9, pad = "0") # Adding leading zeros using str_pad
+#app$zip5 = str_pad(as.character(app$zip5),width = 5, pad = "0") # Adding leading zeros using str_pad
+#app$homephone = str_pad(app$homephone,width = 10, pad = "0") # Adding leading zeros using str_pad
+
+
 ## concatenate name&dob, address&zip5
 app$name = paste(app$firstname,app$lastname,sep=' ')
 app$identifier = paste(app$name,app$dob,sep=' ')
@@ -26,10 +34,11 @@ app$address = paste(app$address,app$zip5,sep=' ')
 app$date = ymd(as.character(app$date))
 app$dob = ymd(as.character(app$dob))
 # backup the data so far
-# app = app1
+# app1 = app
 app = as.data.table(app)
 
 ## create the daily count data frames for each variable
+## .N is the number of records in each group, with groups defined by "date"for example.
 daily_count = app[,.(countDaily=.N),by=date]
 daily_fname = app[,.(daily_fname=.N),by=.(date,firstname)]
 daily_lname = app[,.(daily_lname=.N),by=.(date,lastname)]
